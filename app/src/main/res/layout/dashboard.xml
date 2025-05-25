@@ -1,0 +1,197 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Dashboard Heading -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="📊 Dashboard"
+                android:textColor="#FFFFFF"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rounded_transparent">
+
+            <!-- Reusable block pattern for all cards -->
+            <!-- Start Detection -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Detection"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Analyze a new MRI scan for brain tumors."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/startDetectionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:textColor="#000000"
+                android:backgroundTint="#BBDEFB"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Previous Results -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous Results"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View your past scan results and reports."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/viewResultsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Results"
+                android:textColor="#000000"
+                android:backgroundTint="#BBDEFB"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Profile -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View or update your user profile."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/goToProfileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to Profile"
+                android:textColor="#000000"
+                android:backgroundTint="#BBDEFB"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Notifications -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notifications"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See your recent alerts and reminders."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/goToNotificationsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to Notifications"
+                android:textColor="#000000"
+                android:backgroundTint="#BBDEFB"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Feedback -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feedback"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share your experience with us."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/goToFeedbackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Give Feedback"
+                android:textColor="#000000"
+                android:backgroundTint="#BBDEFB"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Security -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy and Security"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manage password, privacy and login settings."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/goToSecurityButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy Settings"
+                android:textColor="#000000"
+                android:backgroundTint="#BBDEFB"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

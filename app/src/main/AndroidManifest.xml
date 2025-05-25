@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.braintumordetection">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Braintumordetection">
+
+        <!-- Splash Screen -->
+        <activity
+            android:name=".Welcome"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Other Screens -->
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".DetectionActivity" />
+        <activity android:name=".UploadActivity" />
+        <activity android:name=".ResultActivity" />
+        <activity android:name=".TumorStagesActivity" />
+        <activity android:name=".TreatmentOptionsActivity" />
+        <activity android:name=".TipsRecommendationsActivity" />
+        <activity android:name=".DiagnosisDetailsActivity" />
+        <activity android:name=".TumorClassificationActivity" />
+        <activity android:name=".PatientProfileActivity" />
+        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".HistoryTrackingActivity" />
+        <activity android:name=".DashboardActivity" />
+        <activity android:name=".FeedbackActivity"/>
+        <activity android:name=".PrivacySecurityActivity"/>
+
+
+    </application>
+</manifest>

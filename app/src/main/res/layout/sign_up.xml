@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_transparent"
+            android:padding="24dp"
+            android:layout_marginBottom="25dp"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/signupTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Sign Up"
+                android:textColor="#FFFFFF"
+                android:textSize="35sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Full Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:layout_marginTop="8dp" />
+
+            <EditText
+                android:id="@+id/fullName"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/transparent"
+                android:hint="Enter your full name"
+                android:textColorHint="#80FFFFFF"
+                android:textColor="#FFFFFF"
+                android:inputType="textPersonName"
+                android:paddingHorizontal="16dp"
+                android:textSize="24sp"
+                android:layout_marginTop="12dp" />
+
+            <!-- underline -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#BBDEFB"
+                android:layout_marginTop="4dp"/>
+
+
+            <!-- Email -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:layout_marginTop="12dp" />
+
+            <!-- Email Field -->
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/transparent"
+                android:hint="Enter your email"
+                android:textColorHint="#80FFFFFF"
+                android:textColor="#FFFFFF"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="16dp"
+                android:textSize="24sp"
+                android:layout_marginTop="12dp" />
+
+            <!-- underline -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#BBDEFB"
+                android:layout_marginTop="4dp"/>
+
+            <!-- Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:layout_marginTop="12dp" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/transparent"
+                android:hint="Enter your password"
+                android:textColorHint="#80FFFFFF"
+                android:textColor="#FFFFFF"
+                android:inputType="textPassword"
+                android:paddingHorizontal="16dp"
+                android:textSize="24sp"
+                android:layout_marginTop="12dp" />
+
+            <!-- underline -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#BBDEFB"
+                android:layout_marginTop="4dp"/>
+
+            <!-- Sign Up Button -->
+            <Button
+                android:id="@+id/signupButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="18dp"
+                android:backgroundTint="#BBDEFB"
+                android:text="Sign Up"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Already have an account -->
+            <!-- Already have an account -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_marginTop="18dp"
+                android:gravity="center">
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

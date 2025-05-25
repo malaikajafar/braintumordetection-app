@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Braintumordetection</string>
+    <string name="welcome_to_brain_tumor_detection">Welcome to Brain Tumor Detection</string>
+    <string name="your_comprehensive_solution_for_brain_tumor_detection_and_monitoring">Your comprehensive solution for brain tumor detection and monitoring</string>
+    <string name="analysis_results">Analysis Results</string>
+    <string name="select_your_mri_scan_image">Select your MRI scan image</string>
+    <string name="_2024_03_15">2024-03-15</string>
+    <string name="diagnosis_details">Diagnosis Details</string>
+    <string name="key_findings">Key Findings</string>
+    <string name="affected_areas_mapped">• Affected areas mapped</string>
+    <string name="growth_pattern_analyzed">• Growth pattern analyzed</string>
+    <string name="diagnostic_tests">Diagnostic Tests</string>
+    <string name="mri_analysis_complete">• MRI analysis complete</string>
+    <string name="blood_work_results_pending">• Blood work results pending</string>
+    <string name="additional_scans_scheduled">• Additional scans scheduled</string>
+    <string name="view_classification">View Classification</string>
+    <string name="view_profile">View Profile</string>
+    <string name="ai_tips_amp_recommendations"><![CDATA[AI Tips & Recommendations]]></string>
+    <string name="ai_insights">AI Insights</string>
+    <string name="regular_monitoring_recommended">• Regular monitoring recommended</string>
+    <string name="create_account">➕ Create Account</string>
+    <string name="get_started">Get Started</string>
+    <string name="notifications_icon">Notifications Icon</string>
+    <string name="notifications">Notifications</string>
+    <string name="notification">Notification</string>
+    <string name="manage_password_privacy_and_login_settings">\@Manage password, privacy, and login settings.</string>
+    <string name="security_settings">Security Settings</string>
+    <string name="security">Security Settings</string>
+    <string name="give_feedback">Give Feedback</string>
+    <string name="analyze_scan">Analyze Scan</string>
+</resources>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <TextView
+        android:text="Share Your Feedback"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_transparent"
+        android:padding="30dp"
+        android:elevation="4dp">
+
+
+        <TextView
+            android:text="How was your experience?"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btnThumbsUp"
+                android:text="👍"
+                android:layout_width="90dp"
+                android:layout_height="80dp"
+                android:backgroundTint="#FFFFFF"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/btnThumbsDown"
+                android:text="👎"
+                android:layout_width="90dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="#FFFFFF"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <TextView
+            android:text="Tell us more"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"/>
+
+        <EditText
+            android:id="@+id/editFeedbackText"
+            android:hint="What went well? What could be improved?"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:drawable/edit_text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:gravity="top"
+            android:inputType="textMultiLine" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:text="Cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#BBDEFB"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:text="Submit"
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#BBDEFB"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
