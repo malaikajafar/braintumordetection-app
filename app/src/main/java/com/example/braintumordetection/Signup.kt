@@ -1,4 +1,4 @@
-package com.example.braintumordetection // Change to your actual package name
+package com.example.braintumordetection
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -14,9 +16,13 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var signUpButton: Button
 
+    // Firebase instances
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.sign_up) // XML file name must be activity_sign_up.xml
+        setContentView(R.layout.sign_up)
 
         // Initialize views
         fullNameEditText = findViewById(R.id.fullName)
@@ -24,29 +30,54 @@ class SignUpActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.password)
         signUpButton = findViewById(R.id.signupButton)
 
+        // Initialize Firebase
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
         // Handle sign-up button click
         signUpButton.setOnClickListener {
             val fullName = fullNameEditText.text.toString().trim()
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            // Basic input validation
+            // Input validation
             if (fullName.isEmpty()) {
                 showToast("Please enter your full name")
             } else if (email.isEmpty()) {
                 showToast("Please enter your email")
             } else if (password.isEmpty()) {
                 showToast("Please enter your password")
+            } else if (password.length < 6) {
+                showToast("Password must be at least 6 characters")
             } else {
-                // Here you can add actual sign-up logic (e.g., Firebase, local DB, etc.)
-                showToast("Sign Up Successful!")
+                // Firebase sign up
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val userId = auth.currentUser?.uid
 
+                            // Save user info in Firestore
+                            val userMap = hashMapOf(
+                                "fullName" to fullName,
+                                "email" to email
+                            )
 
-                val intent = Intent(this, DetectionActivity::class.java)
-                startActivity(intent)
-
-
-                finish()
+                            firestore.collection("users").document(userId!!)
+                                .set(userMap)
+                                .addOnSuccessListener {
+                                    showToast("Sign Up Successful!")
+                                    // Go to detection screen
+                                    val intent = Intent(this, DetectionActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    showToast("Error saving user data: ${e.message}")
+                                }
+                        } else {
+                            showToast("Sign Up Failed: ${task.exception?.message}")
+                        }
+                    }
             }
         }
     }

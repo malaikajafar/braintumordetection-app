@@ -1,18 +1,24 @@
-package com.example.braintumordetection // ← Replace this with your actual package name
+package com.example.braintumordetection
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.braintumordetection.R
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.log_in) // ← Replace with your XML layout file name if different
+        setContentView(R.layout.log_in) // ← Make sure your layout file is named correctly
+
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
 
         // Bind views
         val emailEditText = findViewById<EditText>(R.id.email)
@@ -22,15 +28,24 @@ class LoginActivity : AppCompatActivity() {
 
         // Login button click listener
         loginButton.setOnClickListener {
-            val email = emailEditText.text.toString()
-            val password = passwordEditText.text.toString()
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
 
-            // You can add your authentication logic here
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                // For now, just show a success message or go to next screen
-                // startActivity(Intent(this, HomeActivity::class.java))
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // Show some error message
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                            // Go to next screen
+                            val intent = Intent(this, DetectionActivity::class.java) // Replace with your home screen
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
             }
         }
 
