@@ -22,7 +22,7 @@ class SignUpActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.sign_up)
+        setContentView(R.layout.sign_up) // Make sure you have sign_up.xml layout
 
         // Initialize views
         fullNameEditText = findViewById(R.id.fullName)
@@ -34,13 +34,11 @@ class SignUpActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // Handle sign-up button click
         signUpButton.setOnClickListener {
             val fullName = fullNameEditText.text.toString().trim()
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            // Input validation
             if (fullName.isEmpty()) {
                 showToast("Please enter your full name")
             } else if (email.isEmpty()) {
@@ -50,13 +48,10 @@ class SignUpActivity : AppCompatActivity() {
             } else if (password.length < 6) {
                 showToast("Password must be at least 6 characters")
             } else {
-                // Firebase sign up
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             val userId = auth.currentUser?.uid
-
-                            // Save user info in Firestore
                             val userMap = hashMapOf(
                                 "fullName" to fullName,
                                 "email" to email
@@ -66,7 +61,6 @@ class SignUpActivity : AppCompatActivity() {
                                 .set(userMap)
                                 .addOnSuccessListener {
                                     showToast("Sign Up Successful!")
-                                    // Go to detection screen
                                     val intent = Intent(this, DetectionActivity::class.java)
                                     startActivity(intent)
                                     finish()
