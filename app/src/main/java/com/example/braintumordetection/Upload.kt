@@ -1,12 +1,17 @@
 package com.example.braintumordetection
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.*
 
 class UploadActivity : AppCompatActivity() {
 
@@ -21,36 +26,34 @@ class UploadActivity : AppCompatActivity() {
         const val FILE_SELECT_CODE = 1001
     }
 
+    private val storageRef by lazy { FirebaseStorage.getInstance().reference }
+    private val firestore by lazy { FirebaseFirestore.getInstance() }
+    private val auth by lazy { FirebaseAuth.getInstance() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.upload)
 
-        // Initialization
         chooseFileButton = findViewById(R.id.chooseFileButton)
         selectedFileName = findViewById(R.id.selectedFileName)
         imagePreview = findViewById(R.id.imagePreview)
         analyzeButton = findViewById(R.id.analyzeScanButton)
 
-        // File choose logic
         chooseFileButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"
             startActivityForResult(Intent.createChooser(intent, "Select MRI Scan"), FILE_SELECT_CODE)
         }
 
-        // Analyze Scan button click logic
         analyzeButton.setOnClickListener {
             if (selectedUri != null) {
-                val intent = Intent(this,ResultActivity::class.java)
-                intent.putExtra("imageUri", selectedUri.toString())
-                startActivity(intent)
+                uploadImageToFirebase(selectedUri!!)
             } else {
                 Toast.makeText(this, "Please select an image first.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // Handle selected image
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -62,5 +65,44 @@ class UploadActivity : AppCompatActivity() {
                 selectedFileName.visibility = View.GONE
             }
         }
+    }
+
+    private fun uploadImageToFirebase(imageUri: Uri) {
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Uploading...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        val fileName = UUID.randomUUID().toString() + ".jpg"
+        val ref = storageRef.child("uploads/$fileName")
+
+        ref.putFile(imageUri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    saveImageInfoToFirestore(downloadUrl.toString())
+                    progressDialog.dismiss()
+
+                    // Go to result screen after upload
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra("imageUri", imageUri.toString())
+                    startActivity(intent)
+                }
+            }
+            .addOnFailureListener { e ->
+                progressDialog.dismiss()
+                Toast.makeText(this, "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun saveImageInfoToFirestore(downloadUrl: String) {
+        val userId = auth.currentUser?.uid ?: "unknown_user"
+        val data = hashMapOf(
+            "userId" to userId,
+            "imageUrl" to downloadUrl,
+            "timestamp" to System.currentTimeMillis(),
+            "result" to "Pending" // update later from ResultActivity if needed
+        )
+
+        firestore.collection("detections").add(data)
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.kapt")
     id("com.google.gms.google-services")
 }
 
@@ -40,6 +41,21 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    // Firebase Storage
+    implementation ("com.google.firebase:firebase-storage-ktx")
+    // Firebase Firestore
+    implementation ("com.google.firebase:firebase-firestore-ktx")
+
+    // For image display (if using Glide or similar)
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    kapt ("com.github.bumptech.glide:compiler:4.16.0")
+
+    // AndroidX
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // Kotlin Extensions
+    implementation ("androidx.core:core-ktx:1.12.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -50,3 +66,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 apply(plugin = "com.google.gms.google-services")
+apply (plugin= "kotlin-kapt")

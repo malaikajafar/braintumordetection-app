@@ -2,6 +2,8 @@ package com.example.braintumordetection
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -16,21 +18,18 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var signUpButton: Button
 
-    // Firebase instances
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.sign_up) // Make sure you have sign_up.xml layout
+        setContentView(R.layout.sign_up)
 
-        // Initialize views
         fullNameEditText = findViewById(R.id.fullName)
         emailEditText = findViewById(R.id.email)
         passwordEditText = findViewById(R.id.password)
         signUpButton = findViewById(R.id.signupButton)
 
-        // Initialize Firebase
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -39,39 +38,44 @@ class SignUpActivity : AppCompatActivity() {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            if (fullName.isEmpty()) {
-                showToast("Please enter your full name")
-            } else if (email.isEmpty()) {
-                showToast("Please enter your email")
-            } else if (password.isEmpty()) {
-                showToast("Please enter your password")
-            } else if (password.length < 6) {
-                showToast("Password must be at least 6 characters")
-            } else {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val userId = auth.currentUser?.uid
-                            val userMap = hashMapOf(
-                                "fullName" to fullName,
-                                "email" to email
-                            )
+            // 🛡️ Input Validation
+            when {
+                fullName.isEmpty() -> showToast("Please enter your full name")
+                email.isEmpty() -> showToast("Please enter your email")
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> showToast("Invalid email format")
+                password.isEmpty() -> showToast("Please enter your password")
+                password.length < 6 -> showToast("Password must be at least 6 characters")
+                else -> {
+                    Log.d("SignUp", "Trying to sign up...")
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val userId = auth.currentUser?.uid
+                                val userMap = hashMapOf(
+                                    "fullName" to fullName,
+                                    "email" to email
+                                )
 
-                            firestore.collection("users").document(userId!!)
-                                .set(userMap)
-                                .addOnSuccessListener {
-                                    showToast("Sign Up Successful!")
-                                    val intent = Intent(this, DetectionActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                .addOnFailureListener { e ->
-                                    showToast("Error saving user data: ${e.message}")
-                                }
-                        } else {
-                            showToast("Sign Up Failed: ${task.exception?.message}")
+                                firestore.collection("users").document(userId!!)
+                                    .set(userMap)
+                                    .addOnSuccessListener {
+                                        Log.d("SignUp", "User data saved in Firestore")
+                                        showToast("Sign Up Successful!")
+                                        val intent = Intent(this, DetectionActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("SignUp", "Firestore error", e)
+                                        showToast("Error saving user data: ${e.message}")
+                                    }
+
+                            } else {
+                                Log.e("SignUp", "Firebase signup error", task.exception!!)
+                                showToast("Sign Up Failed: ${task.exception?.message}")
+                            }
                         }
-                    }
+                }
             }
         }
     }
