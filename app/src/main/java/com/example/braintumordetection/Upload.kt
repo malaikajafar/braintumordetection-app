@@ -62,7 +62,11 @@ class UploadActivity : AppCompatActivity() {
             if (selectedUri != null) {
                 imagePreview.setImageURI(selectedUri)
                 imagePreview.visibility = View.VISIBLE
-                selectedFileName.visibility = View.GONE
+
+                // Show file name
+                val fileName = getFileNameFromUri(selectedUri!!)
+                selectedFileName.text = "Selected: $fileName"
+                selectedFileName.visibility = View.VISIBLE
             }
         }
     }
@@ -82,9 +86,11 @@ class UploadActivity : AppCompatActivity() {
                     saveImageInfoToFirestore(downloadUrl.toString())
                     progressDialog.dismiss()
 
+                    Toast.makeText(this, "Upload successful!", Toast.LENGTH_SHORT).show()
+
                     // Go to result screen after upload
                     val intent = Intent(this, ResultActivity::class.java)
-                    intent.putExtra("imageUri", imageUri.toString())
+                    intent.putExtra("imageUri", downloadUrl.toString())  // better to pass download URL here
                     startActivity(intent)
                 }
             }
@@ -104,5 +110,23 @@ class UploadActivity : AppCompatActivity() {
         )
 
         firestore.collection("detections").add(data)
+            .addOnSuccessListener {
+                // Optional: You can log or Toast success here
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to save info: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // Helper function to get file name from Uri
+    private fun getFileNameFromUri(uri: Uri): String {
+        var result = "unknown"
+        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex("_display_name")
+            if (cursor.moveToFirst() && nameIndex >= 0) {
+                result = cursor.getString(nameIndex)
+            }
+        }
+        return result
     }
 }
