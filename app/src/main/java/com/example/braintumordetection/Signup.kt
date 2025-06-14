@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpActivity : AppCompatActivity() {
@@ -25,25 +26,24 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up)
 
+        // Initialize Firebase
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
         // View bindings
         fullNameEditText = findViewById(R.id.fullName)
         emailEditText = findViewById(R.id.email)
         passwordEditText = findViewById(R.id.password)
         signUpButton = findViewById(R.id.signupButton)
 
-        // Firebase initialization
-        auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
-
-        // Sign Up Click Listener
         signUpButton.setOnClickListener {
             val fullName = fullNameEditText.text.toString().trim()
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            if (!validateInputs(fullName, email, password)) return@setOnClickListener
-
-            createFirebaseUser(fullName, email, password)
+            if (validateInputs(fullName, email, password)) {
+                signUpUser(fullName, email, password)
+            }
         }
     }
 
@@ -73,39 +73,72 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun createFirebaseUser(fullName: String, email: String, password: String) {
+    private fun signUpUser(fullName: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val userId = auth.currentUser?.uid
-                    if (userId != null) {
-                        val userMap = hashMapOf(
-                            "fullName" to fullName,
-                            "email" to email
-                        )
+            .addOnCompleteListener { authTask ->
+                if (authTask.isSuccessful) {
+                    val user = auth.currentUser
+                    if (user != null) {
+                        // Update user profile with display name
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(fullName)
+                            .build()
 
-                        firestore.collection("users").document(userId)
-                            .set(userMap)
-                            .addOnSuccessListener {
-                                Log.d("SignUp", "User data saved in Firestore")
-                                showToast("Sign Up Successful!")
-                                startActivity(Intent(this, DetectionActivity::class.java))
-                                finish()
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("SignUp", "Firestore error", e)
-                                showToast("Error saving user data: ${e.message}")
+                        user.updateProfile(profileUpdates)
+                            .addOnCompleteListener { profileTask ->
+                                if (profileTask.isSuccessful) {
+                                    // Save additional user data to Firestore
+                                    saveUserToFirestore(user.uid, fullName, email)
+                                } else {
+                                    handleError("Failed to update profile", profileTask.exception)
+                                }
                             }
                     } else {
-                        showToast("Unexpected error: User ID is null")
-                        Log.e("SignUp", "FirebaseAuth userId is null")
+                        handleError("User creation failed - null user", null)
                     }
                 } else {
-                    val errorMsg = task.exception?.message ?: "Unknown error"
-                    Log.e("SignUp", "Firebase signup error: $errorMsg", task.exception)
-                    showToast("Sign Up Failed: $errorMsg")
+                    handleError("Authentication failed", authTask.exception)
                 }
             }
+    }
+
+    private fun saveUserToFirestore(userId: String, fullName: String, email: String) {
+        val userData = hashMapOf(
+            "fullName" to fullName,
+            "email" to email,
+            "createdAt" to System.currentTimeMillis()
+        )
+
+        firestore.collection("users").document(userId)
+            .set(userData)
+            .addOnSuccessListener {
+                // Send email verification
+                auth.currentUser?.sendEmailVerification()
+                    ?.addOnCompleteListener { verificationTask ->
+                        if (verificationTask.isSuccessful) {
+                            Log.d("SignUp", "Verification email sent")
+                        }
+                        // Navigate to DetectionActivity regardless of verification status
+                        navigateToDetection()
+                    }
+            }
+            .addOnFailureListener { e ->
+                handleError("Failed to save user data", e)
+                // Optional: Delete the user if Firestore fails
+                auth.currentUser?.delete()
+            }
+    }
+
+    private fun navigateToDetection() {
+        startActivity(Intent(this, DetectionActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+        finish()
+    }
+
+    private fun handleError(message: String, exception: Exception?) {
+        Log.e("SignUp", message, exception)
+        showToast("Error: ${exception?.message ?: message}")
     }
 
     private fun showToast(message: String) {

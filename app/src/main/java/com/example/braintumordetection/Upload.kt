@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -40,17 +41,16 @@ class UploadActivity : AppCompatActivity() {
         analyzeButton = findViewById(R.id.analyzeScanButton)
 
         chooseFileButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "image/*"
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+            }
             startActivityForResult(Intent.createChooser(intent, "Select MRI Scan"), FILE_SELECT_CODE)
         }
 
         analyzeButton.setOnClickListener {
-            if (selectedUri != null) {
-                uploadImageToFirebase(selectedUri!!)
-            } else {
-                Toast.makeText(this, "Please select an image first.", Toast.LENGTH_SHORT).show()
-            }
+            selectedUri?.let {
+                uploadImageToFirebase(it)
+            } ?: Toast.makeText(this, "Please select an image first.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -59,12 +59,11 @@ class UploadActivity : AppCompatActivity() {
 
         if (requestCode == FILE_SELECT_CODE && resultCode == Activity.RESULT_OK) {
             selectedUri = data?.data
-            if (selectedUri != null) {
-                imagePreview.setImageURI(selectedUri)
+            selectedUri?.let {
+                imagePreview.setImageURI(it)
                 imagePreview.visibility = View.VISIBLE
 
-                // Show file name
-                val fileName = getFileNameFromUri(selectedUri!!)
+                val fileName = getFileNameFromUri(it)
                 selectedFileName.text = "Selected: $fileName"
                 selectedFileName.visibility = View.VISIBLE
             }
@@ -72,10 +71,11 @@ class UploadActivity : AppCompatActivity() {
     }
 
     private fun uploadImageToFirebase(imageUri: Uri) {
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Uploading...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
+        val progressDialog = ProgressDialog(this).apply {
+            setMessage("Uploading...")
+            setCancelable(false)
+            show()
+        }
 
         val fileName = UUID.randomUUID().toString() + ".jpg"
         val ref = storageRef.child("uploads/$fileName")
@@ -83,14 +83,17 @@ class UploadActivity : AppCompatActivity() {
         ref.putFile(imageUri)
             .addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    saveImageInfoToFirestore(downloadUrl.toString())
+                    val predictionResult = "Tumor" // 🔮 Replace this with actual ML result later
+
+                    saveImageInfoToFirestore(downloadUrl.toString(), predictionResult)
                     progressDialog.dismiss()
 
                     Toast.makeText(this, "Upload successful!", Toast.LENGTH_SHORT).show()
 
-                    // Go to result screen after upload
-                    val intent = Intent(this, ResultActivity::class.java)
-                    intent.putExtra("imageUri", downloadUrl.toString())  // better to pass download URL here
+                    val intent = Intent(this, ResultActivity::class.java).apply {
+                        putExtra("imageUri", downloadUrl.toString())
+                        putExtra("predictionResult", predictionResult)
+                    }
                     startActivity(intent)
                 }
             }
@@ -100,29 +103,29 @@ class UploadActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveImageInfoToFirestore(downloadUrl: String) {
-        val userId = auth.currentUser?.uid ?: "unknown_user"
+    private fun saveImageInfoToFirestore(downloadUrl: String, predictionResult: String) {
+        val userId = auth.currentUser?.uid ?: "anonymous"
         val data = hashMapOf(
             "userId" to userId,
             "imageUrl" to downloadUrl,
             "timestamp" to System.currentTimeMillis(),
-            "result" to "Pending" // update later from ResultActivity if needed
+            "result" to predictionResult
         )
 
-        firestore.collection("detections").add(data)
+        firestore.collection("detections")
+            .add(data)
             .addOnSuccessListener {
-                // Optional: You can log or Toast success here
+                // Optional: success toast/log
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to save info: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to save to Firestore: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-    // Helper function to get file name from Uri
     private fun getFileNameFromUri(uri: Uri): String {
-        var result = "unknown"
+        var result = "unknown_file.jpg"
         contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            val nameIndex = cursor.getColumnIndex("_display_name")
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             if (cursor.moveToFirst() && nameIndex >= 0) {
                 result = cursor.getString(nameIndex)
             }
