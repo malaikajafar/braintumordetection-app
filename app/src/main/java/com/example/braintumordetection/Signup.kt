@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -26,11 +25,11 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up)
 
-        // Initialize Firebase
+        // Firebase init
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // View bindings
+        // Bind views
         fullNameEditText = findViewById(R.id.fullName)
         emailEditText = findViewById(R.id.email)
         passwordEditText = findViewById(R.id.password)
@@ -42,7 +41,7 @@ class SignUpActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString().trim()
 
             if (validateInputs(fullName, email, password)) {
-                signUpUser(fullName, email, password)
+                createAccount(fullName, email, password)
             }
         }
     }
@@ -50,98 +49,94 @@ class SignUpActivity : AppCompatActivity() {
     private fun validateInputs(fullName: String, email: String, password: String): Boolean {
         return when {
             fullName.isEmpty() -> {
-                showToast("Please enter your full name")
+                toast("Please enter your full name")
                 false
             }
             email.isEmpty() -> {
-                showToast("Please enter your email")
+                toast("Please enter your email")
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                showToast("Invalid email format")
+                toast("Invalid email format")
                 false
             }
             password.isEmpty() -> {
-                showToast("Please enter your password")
+                toast("Please enter your password")
                 false
             }
             password.length < 6 -> {
-                showToast("Password must be at least 6 characters")
+                toast("Password must be at least 6 characters")
                 false
             }
             else -> true
         }
     }
 
-    private fun signUpUser(fullName: String, email: String, password: String) {
+    private fun createAccount(fullName: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { authTask ->
-                if (authTask.isSuccessful) {
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     val user = auth.currentUser
-                    if (user != null) {
-                        // Update user profile with display name
-                        val profileUpdates = UserProfileChangeRequest.Builder()
-                            .setDisplayName(fullName)
-                            .build()
-
-                        user.updateProfile(profileUpdates)
-                            .addOnCompleteListener { profileTask ->
-                                if (profileTask.isSuccessful) {
-                                    // Save additional user data to Firestore
-                                    saveUserToFirestore(user.uid, fullName, email)
-                                } else {
-                                    handleError("Failed to update profile", profileTask.exception)
-                                }
-                            }
-                    } else {
-                        handleError("User creation failed - null user", null)
+                    val userId = user?.uid ?: run {
+                        toast("User creation failed")
+                        return@addOnCompleteListener
                     }
+
+                    // Update user profile
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setDisplayName(fullName)
+                        .build()
+
+                    user.updateProfile(profileUpdates)
+                        .addOnCompleteListener { profileTask ->
+                            if (profileTask.isSuccessful) {
+                                // Save additional user data to Firestore
+                                val userMap = hashMapOf(
+                                    "fullName" to fullName,
+                                    "email" to email,
+                                    "createdAt" to System.currentTimeMillis()
+                                )
+
+                                firestore.collection("users").document(userId).set(userMap)
+                                    .addOnSuccessListener {
+                                        sendEmailVerification(user)
+                                    }
+                                    .addOnFailureListener { e ->
+                                        toast("Failed to save data: ${e.message}")
+                                        // Optional: Delete user if Firestore fails
+                                        user.delete()
+                                    }
+                            } else {
+                                toast("Failed to update profile: ${profileTask.exception?.message}")
+                            }
+                        }
                 } else {
-                    handleError("Authentication failed", authTask.exception)
+                    toast("Sign up failed: ${task.exception?.message}")
                 }
             }
     }
 
-    private fun saveUserToFirestore(userId: String, fullName: String, email: String) {
-        val userData = hashMapOf(
-            "fullName" to fullName,
-            "email" to email,
-            "createdAt" to System.currentTimeMillis()
-        )
-
-        firestore.collection("users").document(userId)
-            .set(userData)
-            .addOnSuccessListener {
-                // Send email verification
-                auth.currentUser?.sendEmailVerification()
-                    ?.addOnCompleteListener { verificationTask ->
-                        if (verificationTask.isSuccessful) {
-                            Log.d("SignUp", "Verification email sent")
-                        }
-                        // Navigate to DetectionActivity regardless of verification status
-                        navigateToDetection()
-                    }
-            }
-            .addOnFailureListener { e ->
-                handleError("Failed to save user data", e)
-                // Optional: Delete the user if Firestore fails
-                auth.currentUser?.delete()
+    private fun sendEmailVerification(user: FirebaseUser) {
+        user.sendEmailVerification()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    toast("Verification email sent to ${user.email}")
+                } else {
+                    toast("Failed to send verification email: ${task.exception?.message}")
+                }
+                // Navigate regardless of verification email success
+                navigateToNextScreen()
             }
     }
 
-    private fun navigateToDetection() {
-        startActivity(Intent(this, DetectionActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+    private fun navigateToNextScreen() {
+        val intent = Intent(this, DetectionActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
         finish()
     }
 
-    private fun handleError(message: String, exception: Exception?) {
-        Log.e("SignUp", message, exception)
-        showToast("Error: ${exception?.message ?: message}")
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun toast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }
