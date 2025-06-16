@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="38dp">
 
         <!-- Profile Section -->
         <LinearLayout
@@ -39,13 +39,7 @@
                 android:textColor="#000000"
                 android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/btnNotification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#BBDEFB"
-                android:text="Notifications"
-                android:textColor="#000000" />
+
         </LinearLayout>
 
         <!-- Personal Info Section -->
@@ -158,87 +152,32 @@
                 android:textColor="#CCCCCC" />
         </LinearLayout>
 
-        <!-- Appointments Section -->
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="113dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/rounded_transparent"
-            android:orientation="vertical">
+            android:layout_height="48dp"
+            android:layout_marginBottom="19dp"
+            android:background="@drawable/rounded_transparent">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="299dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:text="Appointments"
+                android:layout_weight="1"
+                android:layout_marginLeft="22dp"
+                android:text="Notifications"
                 android:textColor="#FFFFFF"
-                android:textSize="19sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <Switch
+                android:id="@+id/switchUpcomingAppointment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="8dp"
-                android:text="Next MRI Scan: April 10, 2024"
-                android:textColor="#CCCCCC" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Consultation: April 15, 2024"
-                android:textColor="#CCCCCC" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Follow-up: April 25, 2024"
-                android:textColor="#CCCCCC" />
+                android:checked="true"
+                android:minWidth="55dp"
+                android:padding="14dp" />
         </LinearLayout>
 
-        <!-- Documents Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="114dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/rounded_transparent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:text="Documents"
-                android:textColor="#FFFFFF"
-                android:textSize="19sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="8dp"
-                android:text="Latest MRI Report"
-                android:textColor="#CCCCCC" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Treatment History"
-                android:textColor="#CCCCCC" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Medication List"
-                android:textColor="#CCCCCC" />
-        </LinearLayout>
 
         <!-- Buttons Section (Vertical Layout) -->
         <LinearLayout
@@ -248,29 +187,13 @@
             android:gravity="center"
             android:layout_marginBottom="16dp">
 
-            <Button
-                android:id="@+id/btnViewHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View History"
-                android:textColor="#000000"
-                android:backgroundTint="#BBDEFB"
-                android:layout_marginTop="8dp" />
 
-            <Button
-                android:id="@+id/btnViewTips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View Health Tips"
-                android:textColor="#000000"
-                android:backgroundTint="#BBDEFB"
-                android:layout_marginTop="8dp" />
 
             <Button
                 android:id="@+id/goToSecurityButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Privacy Settings"
+                android:text="Logout "
                 android:textColor="#000000"
                 android:backgroundTint="#BBDEFB"
                 android:layout_marginTop="8dp" />

@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")
     id("com.google.gms.google-services")
 }
 
@@ -45,10 +44,11 @@ dependencies {
     implementation ("com.google.firebase:firebase-storage-ktx")
     // Firebase Firestore
     implementation ("com.google.firebase:firebase-firestore-ktx")
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.10.0")
 
     // For image display (if using Glide or similar)
     implementation ("com.github.bumptech.glide:glide:4.16.0")
-    kapt ("com.github.bumptech.glide:compiler:4.16.0")
+
 
     // AndroidX
     implementation ("androidx.appcompat:appcompat:1.6.1")

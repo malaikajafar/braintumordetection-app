@@ -3,6 +3,7 @@ package com.example.braintumordetection
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
 
 class FeedbackActivity : AppCompatActivity() {
 
@@ -12,11 +13,15 @@ class FeedbackActivity : AppCompatActivity() {
     private lateinit var btnCancel: Button
     private lateinit var btnSubmit: Button
 
+    private lateinit var db: FirebaseFirestore
     private var isThumbsUp: Boolean? = null // null = no selection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.feedback)
+
+        // Initialize Firebase Firestore
+        db = FirebaseFirestore.getInstance()
 
         // Initialize views
         btnThumbsUp = findViewById(R.id.btnThumbsUp)
@@ -28,8 +33,8 @@ class FeedbackActivity : AppCompatActivity() {
         // Feedback selection logic
         btnThumbsUp.setOnClickListener {
             isThumbsUp = true
-            btnThumbsUp.setBackgroundColor(getColor(R.color.teal_200)) // Highlight selection
-            btnThumbsDown.setBackgroundColor(getColor(android.R.color.white)) // Reset other
+            btnThumbsUp.setBackgroundColor(getColor(R.color.teal_200))
+            btnThumbsDown.setBackgroundColor(getColor(android.R.color.white))
         }
 
         btnThumbsDown.setOnClickListener {
@@ -40,7 +45,7 @@ class FeedbackActivity : AppCompatActivity() {
 
         // Cancel button logic
         btnCancel.setOnClickListener {
-            finish() // Close feedback screen
+            finish()
         }
 
         // Submit button logic
@@ -52,17 +57,28 @@ class FeedbackActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // You can replace this with logic to store feedback in a database or send to a server
-            Toast.makeText(this, "Feedback submitted. Thank you!", Toast.LENGTH_SHORT).show()
+            val feedbackData = hashMapOf(
+                "thumbsUp" to isThumbsUp,
+                "feedbackText" to feedbackText,
+                "timestamp" to System.currentTimeMillis()
+            )
 
-            // Optionally reset UI
-            isThumbsUp = null
-            editFeedbackText.text.clear()
-            btnThumbsUp.setBackgroundColor(getColor(android.R.color.white))
-            btnThumbsDown.setBackgroundColor(getColor(android.R.color.white))
+            db.collection("feedback")
+                .add(feedbackData)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Feedback submitted. Thank you!", Toast.LENGTH_SHORT).show()
 
-            // Optionally finish the activity
-            finish()
+                    // Reset UI
+                    isThumbsUp = null
+                    editFeedbackText.text.clear()
+                    btnThumbsUp.setBackgroundColor(getColor(android.R.color.white))
+                    btnThumbsDown.setBackgroundColor(getColor(android.R.color.white))
+
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 }
