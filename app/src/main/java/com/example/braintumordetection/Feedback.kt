@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue // ← Add this import
 
 class FeedbackActivity : AppCompatActivity() {
 
@@ -60,7 +61,7 @@ class FeedbackActivity : AppCompatActivity() {
             val feedbackData = hashMapOf(
                 "thumbsUp" to isThumbsUp,
                 "feedbackText" to feedbackText,
-                "timestamp" to System.currentTimeMillis()
+                "timestamp" to FieldValue.serverTimestamp()  // ✅ Timestamp in correct format
             )
 
             db.collection("feedback")

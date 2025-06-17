@@ -21,8 +21,8 @@ class TumorClassificationActivity : AppCompatActivity() {
         // Handle "View Profile" button click
         viewProfileButton.setOnClickListener {
             Toast.makeText(this, "View Profile clicked", Toast.LENGTH_SHORT).show()
-            // Example: startActivity(Intent(this, PatientProfileActivity::class.java))
-            val intent = Intent(this, PatientProfileActivity::class.java)
+            // Example: startActivity(Intent(this, ProfileActivity::class.java))
+            val intent = Intent(this, ProfileActivity ::class.java)
             startActivity(intent)
         }
 

@@ -29,7 +29,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         goToProfileButton.setOnClickListener {
-            startActivity(Intent(this, PatientProfileActivity::class.java))
+            startActivity(Intent(this, ProfileActivity ::class.java))
         }
 
         goToNotificationsButton.setOnClickListener {

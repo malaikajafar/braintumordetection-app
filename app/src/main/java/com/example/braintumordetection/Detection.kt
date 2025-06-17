@@ -35,7 +35,7 @@ class DetectionActivity : AppCompatActivity() {
 
         // Set click listeners
         btnViewProfile.setOnClickListener {
-            startActivity(Intent(this, PatientProfileActivity::class.java))
+            startActivity(Intent(this, ProfileActivity ::class.java))
         }
 
         btnStartDetection.setOnClickListener {

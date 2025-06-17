@@ -26,7 +26,7 @@ class HistoryTrackingActivity : AppCompatActivity() {
         // "View Profile" button action
         viewProfileButton.setOnClickListener {
             Toast.makeText(this, "View Profile clicked", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, PatientProfileActivity::class.java)
+            val intent = Intent(this, ProfileActivity ::class.java)
             startActivity(intent)
         }
     }

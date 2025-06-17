@@ -7,20 +7,15 @@ import android.widget.Button
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var switchUpcomingAppointment: Switch
     private lateinit var goToSecurityButton: Button
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile) // Make sure this matches your XML file name
-
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
 
         // Initialize views
         switchUpcomingAppointment = findViewById(R.id.switchUpcomingAppointment)
@@ -40,8 +35,6 @@ class ProfileActivity : AppCompatActivity() {
 
         // Handle Logout button
         goToSecurityButton.setOnClickListener {
-            auth.signOut() // Sign out from Firebase if used
-
             Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(this, LoginActivity::class.java)
