@@ -181,8 +181,8 @@
                 </LinearLayout>
 
                 <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:checked="true" />
             </LinearLayout>
 
@@ -226,8 +226,8 @@
                 </LinearLayout>
 
                 <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:checked="false" />
             </LinearLayout>
 
