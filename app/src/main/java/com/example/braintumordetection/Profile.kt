@@ -1,46 +1,49 @@
 package com.example.braintumordetection
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Switch
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileSettingsActivity : AppCompatActivity() {
 
-    private lateinit var switchUpcomingAppointment: Switch
-    private lateinit var goToSecurityButton: Button
+    private lateinit var switchNotifications: Switch
+    private lateinit var switchPushNotifications: Switch
+    private lateinit var btnLogout: Button
+    private lateinit var btnEdit: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.profile) // Make sure this matches your XML file name
+        setContentView(R.layout.profile) // Make sure your XML file is named this
 
         // Initialize views
-        switchUpcomingAppointment = findViewById(R.id.switchUpcomingAppointment)
-        goToSecurityButton = findViewById(R.id.goToSecurityButton)
+        switchNotifications = findViewById(R.id.switchNotifications)
+        switchPushNotifications = findViewById(R.id.switchPushNotifications)
+        btnLogout = findViewById(R.id.btnLogout)
+        btnEdit = findViewById(R.id.btnEdit)
 
-        // Get SharedPreferences for switch state
-        val sharedPrefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        val isNotificationEnabled = sharedPrefs.getBoolean("notifications_enabled", true)
-        switchUpcomingAppointment.isChecked = isNotificationEnabled
-
-        // Handle switch state changes
-        switchUpcomingAppointment.setOnCheckedChangeListener { _, isChecked ->
-            sharedPrefs.edit().putBoolean("notifications_enabled", isChecked).apply()
-            val status = if (isChecked) "enabled" else "disabled"
-            Toast.makeText(this, "Notifications $status", Toast.LENGTH_SHORT).show()
+        // Switch listeners
+        switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(this, if (isChecked) "Notifications On" else "Notifications Off", Toast.LENGTH_SHORT).show()
+            // You can save this state in SharedPreferences or Firebase if needed
         }
 
-        // Handle Logout button
-        goToSecurityButton.setOnClickListener {
-            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+        switchPushNotifications.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(this, if (isChecked) "Push Notifications On" else "Push Notifications Off", Toast.LENGTH_SHORT).show()
+        }
 
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+        // Logout action
+        btnLogout.setOnClickListener {
+            Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show()
+            // TODO: Add FirebaseAuth.getInstance().signOut() if using Firebase
+            // Navigate to login screen or finish activity
             finish()
+        }
+
+        // Edit Profile
+        btnEdit.setOnClickListener {
+            Toast.makeText(this, "Edit Profile clicked", Toast.LENGTH_SHORT).show()
+            // TODO: Start EditProfileActivity or show edit dialog
         }
     }
 }
