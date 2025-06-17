@@ -35,7 +35,7 @@ class DetectionActivity : AppCompatActivity() {
 
         // Set click listeners
         btnViewProfile.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity ::class.java))
+            startActivity(Intent(this, ProfileSettingsActivity  ::class.java))
         }
 
         btnStartDetection.setOnClickListener {

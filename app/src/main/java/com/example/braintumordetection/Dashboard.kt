@@ -29,7 +29,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         goToProfileButton.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity ::class.java))
+            startActivity(Intent(this, ProfileSettingsActivity  ::class.java))
         }
 
         goToNotificationsButton.setOnClickListener {

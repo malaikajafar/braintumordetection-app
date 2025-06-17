@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.braintumordetection.R
 import com.example.braintumordetection.TumorStagesActivity
-import com.example.braintumordetection.ProfileActivity
+import com.example.braintumordetection.ProfileSettingsActivity
 import com.example.braintumordetection.TumorClassificationActivity
 
 class DiagnosisDetailsActivity : AppCompatActivity() {
@@ -32,7 +32,7 @@ class DiagnosisDetailsActivity : AppCompatActivity() {
         viewProfileButton.setOnClickListener {
             Toast.makeText(this, "View Profile clicked", Toast.LENGTH_SHORT).show()
             // Example: startActivity(Intent(this, PatientProfileActivity::class.java))
-            val intent = Intent(this, ProfileActivity ::class.java)
+            val intent = Intent(this, ProfileSettingsActivity  ::class.java)
             startActivity(intent)
         }
     }
