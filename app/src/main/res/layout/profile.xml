@@ -66,17 +66,24 @@
                     android:orientation="vertical"
                     android:layout_marginStart="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+
+                    <EditText
+                        android:id="@+id/editFullName"
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp"
+                        android:background="@android:color/transparent"
+                        android:enabled="false"
                         android:text="John Doe"
                         android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+
+                    <EditText
+                        android:id="@+id/editEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@android:color/transparent"
+                        android:enabled="false"
                         android:text="johndoe@example.com"
                         android:textColor="#AAAAAA"
                         android:textSize="14sp" />
@@ -111,6 +118,7 @@
                     android:gravity="center" />
 
                 <LinearLayout
+                    android:id="@+id/btnChangePassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -134,12 +142,6 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:text="➔"
-                    android:textColor="#FFFFFF"
-                    android:gravity="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -254,6 +256,7 @@
                     android:gravity="center" />
 
                 <LinearLayout
+                    android:id="@+id/btnPrivacy"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -276,12 +279,6 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:text="➔"
-                    android:textColor="#FFFFFF"
-                    android:gravity="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -301,6 +298,7 @@
                     android:gravity="center" />
 
                 <LinearLayout
+                    android:id="@+id/btnHelpSupport"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -323,12 +321,7 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:text="➔"
-                    android:textColor="#FFFFFF"
-                    android:gravity="center" />
+
             </LinearLayout>
 
             <!-- Logout Button -->

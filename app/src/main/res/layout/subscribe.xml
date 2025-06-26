@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/rounded_transparent"
+        android:padding="24dp"
+        android:layout_marginTop="100dp">
+
+        <!-- Trial Expired Text -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⏳ Trial Expired"
+            android:textSize="30sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your 7-day free trial has ended.\n\nUpgrade to continue using:\n\n✅ Brain tumor detection\n✅ AI-based reports\n✅ Health tracking and alerts"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Subscribe Now Button -->
+        <Button
+            android:id="@+id/subscribeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subscribe Now"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:backgroundTint="#BBDEFB"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#FF5252" />
+
+    </LinearLayout>
+</ScrollView>

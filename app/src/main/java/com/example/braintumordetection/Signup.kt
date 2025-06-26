@@ -2,7 +2,6 @@ package com.example.braintumordetection
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +9,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -21,27 +23,31 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
+    private var isProcessing = false  // Prevent multiple clicks
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up)
 
-        // Firebase init
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // Bind views
         fullNameEditText = findViewById(R.id.fullName)
         emailEditText = findViewById(R.id.email)
         passwordEditText = findViewById(R.id.password)
         signUpButton = findViewById(R.id.signupButton)
 
         signUpButton.setOnClickListener {
+            if (isProcessing) return@setOnClickListener
+
             val fullName = fullNameEditText.text.toString().trim()
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
             if (validateInputs(fullName, email, password)) {
-                createAccount(fullName, email, password)
+                isProcessing = true
+                signUpButton.isEnabled = false
+                createFirebaseAccount(fullName, email, password)
             }
         }
     }
@@ -49,19 +55,19 @@ class SignUpActivity : AppCompatActivity() {
     private fun validateInputs(fullName: String, email: String, password: String): Boolean {
         return when {
             fullName.isEmpty() -> {
-                toast("Please enter your full name")
+                toast("Enter full name")
                 false
             }
             email.isEmpty() -> {
-                toast("Please enter your email")
+                toast("Enter email")
                 false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                toast("Invalid email format")
+                toast("Invalid email")
                 false
             }
             password.isEmpty() -> {
-                toast("Please enter your password")
+                toast("Enter password")
                 false
             }
             password.length < 6 -> {
@@ -72,59 +78,69 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun createAccount(fullName: String, email: String, password: String) {
+    private fun createFirebaseAccount(fullName: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    val userId = user?.uid ?: run {
-                        toast("User creation failed")
-                        return@addOnCompleteListener
-                    }
-
-                    // Update user profile
-                    val profileUpdates = UserProfileChangeRequest.Builder()
-                        .setDisplayName(fullName)
-                        .build()
-
-                    user.updateProfile(profileUpdates)
-                        .addOnCompleteListener { profileTask ->
-                            if (profileTask.isSuccessful) {
-                                // Save additional user data to Firestore
-                                val userMap = hashMapOf(
-                                    "fullName" to fullName,
-                                    "email" to email,
-                                    "createdAt" to System.currentTimeMillis()
-                                )
-
-                                firestore.collection("users").document(userId).set(userMap)
-                                    .addOnSuccessListener {
-                                        sendEmailVerification(user)
-                                    }
-                                    .addOnFailureListener { e ->
-                                        toast("Failed to save data: ${e.message}")
-                                        // Optional: Delete user if Firestore fails
-                                        user.delete()
-                                    }
-                            } else {
-                                toast("Failed to update profile: ${profileTask.exception?.message}")
-                            }
-                        }
+            .addOnSuccessListener {
+                val user = auth.currentUser
+                if (user != null) {
+                    updateUserProfile(user, fullName)
                 } else {
-                    toast("Sign up failed: ${task.exception?.message}")
+                    toast("Signup failed. Try again.")
+                    resetButton()
                 }
+            }
+            .addOnFailureListener { e ->
+                val message = e.message ?: "Unknown error"
+                if (message.contains("email address is already in use", ignoreCase = true)) {
+                    toast("This email is already registered.")
+                } else {
+                    toast("Signup error: $message")
+                }
+                resetButton()
+            }
+    }
+
+    private fun updateUserProfile(user: FirebaseUser, fullName: String) {
+        val updates = UserProfileChangeRequest.Builder()
+            .setDisplayName(fullName)
+            .build()
+
+        user.updateProfile(updates)
+            .addOnSuccessListener {
+                saveUserToFirestore(user.uid, fullName, user.email ?: "")
+            }
+            .addOnFailureListener { e ->
+                toast("Profile update failed: ${e.message}")
+                user.delete()
+                resetButton()
+            }
+    }
+
+    private fun saveUserToFirestore(userId: String, fullName: String, email: String) {
+        val trialStartDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+// 🎁 Start trial today
+
+        val userMap = hashMapOf(
+            "fullName" to fullName,
+            "email" to email,
+            "createdAt" to System.currentTimeMillis(),
+            "trial_start_date" to trialStartDate
+        )
+
+        firestore.collection("profile").document(userId).set(userMap)
+            .addOnSuccessListener {
+                sendEmailVerification(auth.currentUser!!)
+            }
+            .addOnFailureListener { e ->
+                toast("Failed to save user data: ${e.message}")
+                resetButton()
             }
     }
 
     private fun sendEmailVerification(user: FirebaseUser) {
         user.sendEmailVerification()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    toast("Verification email sent to ${user.email}")
-                } else {
-                    toast("Failed to send verification email: ${task.exception?.message}")
-                }
-                // Navigate regardless of verification email success
+            .addOnCompleteListener {
+                toast("Verification email sent to ${user.email}")
                 navigateToNextScreen()
             }
     }
@@ -134,6 +150,11 @@ class SignUpActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    private fun resetButton() {
+        isProcessing = false
+        signUpButton.isEnabled = true
     }
 
     private fun toast(msg: String) {

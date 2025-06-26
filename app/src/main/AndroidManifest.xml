@@ -33,7 +33,7 @@
         <activity android:name=".TipsRecommendationsActivity" />
         <activity android:name=".DiagnosisDetailsActivity" />
         <activity android:name=".TumorClassificationActivity" />
-        <activity android:name=".PatientProfileActivity" />
+        <activity android:name=".ProfileSettingsActivity" />
         <activity android:name=".NotificationsActivity" />
         <activity android:name=".HistoryTrackingActivity" />
         <activity android:name=".DashboardActivity" />

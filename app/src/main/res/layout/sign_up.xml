@@ -18,6 +18,7 @@
             android:layout_marginBottom="25dp"
             android:layout_centerInParent="true">
 
+            <!-- Title -->
             <TextView
                 android:id="@+id/signupTitle"
                 android:layout_width="wrap_content"
@@ -51,13 +52,11 @@
                 android:textSize="24sp"
                 android:layout_marginTop="12dp" />
 
-            <!-- underline -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#BBDEFB"
                 android:layout_marginTop="4dp"/>
-
 
             <!-- Email -->
             <TextView
@@ -68,7 +67,6 @@
                 android:textSize="24sp"
                 android:layout_marginTop="12dp" />
 
-            <!-- Email Field -->
             <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
@@ -82,7 +80,6 @@
                 android:textSize="24sp"
                 android:layout_marginTop="12dp" />
 
-            <!-- underline -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -111,12 +108,24 @@
                 android:textSize="24sp"
                 android:layout_marginTop="12dp" />
 
-            <!-- underline -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#BBDEFB"
                 android:layout_marginTop="4dp"/>
+
+            <!-- 🎁 Free Trial Info -->
+            <TextView
+                android:id="@+id/trialNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎁 You’ll get a 7-Day Free Trial after signing up"
+                android:textColor="#FFEB3B"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" />
 
             <!-- Sign Up Button -->
             <Button
@@ -131,7 +140,6 @@
                 android:textStyle="bold" />
 
             <!-- Already have an account -->
-            <!-- Already have an account -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -139,14 +147,8 @@
                 android:orientation="vertical"
                 android:layout_marginTop="18dp"
                 android:gravity="center">
-
-
-
             </LinearLayout>
 
-
         </LinearLayout>
-
     </RelativeLayout>
-
 </RelativeLayout>

@@ -5,24 +5,24 @@
     android:background="@drawable/image"
     android:padding="24dp">
 
-    <!-- Wrapper to move all elements down -->
+    <!-- Wrapper -->
     <LinearLayout
         android:id="@+id/contentWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="160dp"
         android:orientation="vertical"
         android:padding="24dp"
         android:background="@drawable/rounded_transparent"
         android:gravity="center_horizontal"
         android:layout_centerHorizontal="true">
 
-        <!-- Welcome Title -->
+        <!-- Title -->
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_to_brain_tumor_detection"
+            android:text="Welcome to Brain Tumor Detection AI"
             android:textSize="26sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
@@ -33,14 +33,28 @@
             android:id="@+id/subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/your_comprehensive_solution_for_brain_tumor_detection_and_monitoring"
-            android:textSize="20sp"
+            android:text="Your comprehensive solution for brain tumor detection and monitoring."
+            android:textSize="18sp"
             android:textColor="#CCCCCC"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
             android:padding="8dp" />
 
-        <!-- Button -->
+        <!-- 🎁 Free Trial Box -->
+        <TextView
+            android:id="@+id/trialInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎁 Enjoy 7 Days Free Trial - No Card Required!"
+            android:textColor="#FFEB3B"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+
+            android:padding="12dp" />
+
+        <!-- Get Started Button -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +65,7 @@
                 android:id="@+id/getStartedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/get_started"
+                android:text="Get Started"
                 android:backgroundTint="#BBDEFB"
                 android:textColor="#000000"
                 android:textSize="20sp"

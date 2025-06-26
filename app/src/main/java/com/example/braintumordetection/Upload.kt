@@ -9,9 +9,6 @@ import android.provider.OpenableColumns
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
 class UploadActivity : AppCompatActivity() {
@@ -26,10 +23,6 @@ class UploadActivity : AppCompatActivity() {
     companion object {
         const val FILE_SELECT_CODE = 1001
     }
-
-    private val storageRef by lazy { FirebaseStorage.getInstance().reference }
-    private val firestore by lazy { FirebaseFirestore.getInstance() }
-    private val auth by lazy { FirebaseAuth.getInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +42,7 @@ class UploadActivity : AppCompatActivity() {
 
         analyzeButton.setOnClickListener {
             selectedUri?.let {
-                uploadImageToFirebase(it)
+                simulateImageProcessing(it)
             } ?: Toast.makeText(this, "Please select an image first.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -70,56 +63,27 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
-    private fun uploadImageToFirebase(imageUri: Uri) {
+    private fun simulateImageProcessing(imageUri: Uri) {
         val progressDialog = ProgressDialog(this).apply {
-            setMessage("Uploading...")
+            setMessage("Analyzing...")
             setCancelable(false)
             show()
         }
 
-        val fileName = UUID.randomUUID().toString() + ".jpg"
-        val ref = storageRef.child("uploads/$fileName")
+        // Simulate delay (e.g., for local ML model in future)
+        imagePreview.postDelayed({
+            progressDialog.dismiss()
 
-        ref.putFile(imageUri)
-            .addOnSuccessListener {
-                ref.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    val predictionResult = "Tumor" // 🔮 Replace this with actual ML result later
+            val predictionResult = "Tumor" // 🔮 Placeholder for local ML result
 
-                    saveImageInfoToFirestore(downloadUrl.toString(), predictionResult)
-                    progressDialog.dismiss()
-
-                    Toast.makeText(this, "Upload successful!", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this, ResultActivity::class.java).apply {
-                        putExtra("imageUri", downloadUrl.toString())
-                        putExtra("predictionResult", predictionResult)
-                    }
-                    startActivity(intent)
-                }
+            val intent = Intent(this, ResultActivity::class.java).apply {
+                putExtra("imageUri", imageUri.toString())
+                putExtra("predictionResult", predictionResult)
             }
-            .addOnFailureListener { e ->
-                progressDialog.dismiss()
-                Toast.makeText(this, "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
+            startActivity(intent)
 
-    private fun saveImageInfoToFirestore(downloadUrl: String, predictionResult: String) {
-        val userId = auth.currentUser?.uid ?: "anonymous"
-        val data = hashMapOf(
-            "userId" to userId,
-            "imageUrl" to downloadUrl,
-            "timestamp" to System.currentTimeMillis(),
-            "result" to predictionResult
-        )
-
-        firestore.collection("detections")
-            .add(data)
-            .addOnSuccessListener {
-                // Optional: success toast/log
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to save to Firestore: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, "Analysis complete!", Toast.LENGTH_SHORT).show()
+        }, 2000) // 2 seconds delay
     }
 
     private fun getFileNameFromUri(uri: Uri): String {
