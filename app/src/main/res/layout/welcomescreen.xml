@@ -40,19 +40,6 @@
             android:gravity="center"
             android:padding="8dp" />
 
-        <!-- 🎁 Free Trial Box -->
-        <TextView
-            android:id="@+id/trialInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🎁 Enjoy 7 Days Free Trial - No Card Required!"
-            android:textColor="#FFEB3B"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-
-            android:padding="12dp" />
 
         <!-- Get Started Button -->
         <LinearLayout
