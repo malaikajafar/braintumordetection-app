@@ -3,28 +3,40 @@ package com.example.braintumordetection
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-class TreatmentOptionsActivity : AppCompatActivity() {
-
+class TreatmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.treatment)
 
-        val viewHistoryButton: Button = findViewById(R.id.viewHistoryButton)
-        val aiTipsButton: Button = findViewById(R.id.aiTipsButton)
+        // Get tumor type from intent
+        val tumorType = intent.getStringExtra("tumorType") ?: "Unknown"
 
-        // View History Button Click
+        // Set treatment text dynamically based on tumor type
+        val treatmentTextView = findViewById<TextView>(R.id.treatmentTextView)
+        val treatment = when (tumorType.lowercase()) {
+            "glioma" -> "Treatment for Glioma:\n• Surgery\n• Radiation Therapy\n• Chemotherapy"
+            "meningioma" -> "Treatment for Meningioma:\n• Observation\n• Surgery\n• Radiation"
+            "pituitary" -> "Treatment for Pituitary Tumor:\n• Hormone Therapy\n• Surgery\n• Radiation"
+            "no tumor" -> "No tumor detected. No treatment needed."
+            else -> "Consult a neurologist for further advice."
+        }
+        treatmentTextView.text = treatment
+
+        // Button to go to View History screen
+        val viewHistoryButton = findViewById<Button>(R.id.viewHistoryButton)
         viewHistoryButton.setOnClickListener {
-            Toast.makeText(this, "Opening Patient History...", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, HistoryTrackingActivity::class.java))
+            val intent = Intent(this, HistoryTrackingActivity::class.java)
+            startActivity(intent)
         }
 
-        // AI Tips Button Click
+        // Button to go to AI Tips screen
+        val aiTipsButton = findViewById<Button>(R.id.aiTipsButton)
         aiTipsButton.setOnClickListener {
-            Toast.makeText(this, "Opening AI Tips...", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, TipsRecommendationsActivity::class.java))
+            val intent = Intent(this, TipsRecommendationsActivity::class.java)
+            startActivity(intent)
         }
     }
 }

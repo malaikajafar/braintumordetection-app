@@ -23,7 +23,7 @@ class TumorStagesActivity : AppCompatActivity() {
         val fullDiagnosisButton = findViewById<Button>(R.id.fullDiagnosisButton)
 
         viewTreatmentOptionsButton.setOnClickListener {
-            val intent = Intent(this, TreatmentOptionsActivity::class.java)
+            val intent = Intent(this, TreatmentActivity::class.java)
             startActivity(intent)
         }
 
